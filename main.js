@@ -23,7 +23,7 @@ async function scrapeGitHub(url, inData) {
 
         let listContributionDays = $(".ContributionCalendar-day");
         for (let i=0; i<listContributionDays.length; i++) {
-            outData[listContributionDays[i]['attribs']['data-date']] = {'github': listContributionDays[i]['attribs']['data-level']};
+            outData[listContributionDays[i]['attribs']['data-date']] = {'github': listContributionDays[i]['attribs']['data-count']};
         }
     } catch (err) {
         console.error(err);
@@ -59,13 +59,11 @@ async function scrapeLeetCode(url, inData) {
     const jsonData = await data.json();
     const calendar = JSON.parse(jsonData.data.matchedUser.userCalendar.submissionCalendar);
 
-    for (unixDate in calendar) {
-       // console.log(date, calendar[date])
-       //const date = new Date(unixDate  * 1000);
-       console.log(formatDate(unixDate));
+    for (date in calendar) {
+        outData[
+            formatDate(parseInt(date)+ 86400)]
+            ['leetcode'] = calendar[date];
     }
-    //inData['2022-10-06']['leet'] = '1'
-    //console.log(inData['2022-10-06'])
     return outData;
 }
 
@@ -88,6 +86,6 @@ async function main() {
     if (USE_LEETCODE) unifiedData = await scrapeLeetCode(URL_LEETCODE, unifiedData);
     
 
-   // console.log(unifiedData);
+    console.log(unifiedData);
 }
 main();
