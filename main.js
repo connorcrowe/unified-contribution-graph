@@ -2,9 +2,9 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const fetch = require("node-fetch");
 
-const URL_GITHUB = 'connorcrowe';
-const URL_GITLAB = 'connorcrowe';
-const URL_LEETCODE = 'connorthecrowe';
+const USR_GITHUB = 'connorcrowe';
+const USR_GITLAB = 'connorcrowe';
+const USR_LEETCODE = 'connorthecrowe';
 
 
 function initializeStructure() {
@@ -13,13 +13,13 @@ function initializeStructure() {
 
 // SCRAPE GITHUB
 // Pulls contributions on each date and returns an updated calendar object with github activity
-async function scrapeGitHub(url, inData) {
+async function scrapeGitHub(usr, inData) {
     // Start with desired calendar structure
     outData = inData;
 
     // Try using axios and cheerio to pull the html and filter it by the class desired
     try {
-        const { data } = await axios.get(`https://github.com/${url}`);
+        const { data } = await axios.get(`https://github.com/${usr}`);
         const $ = cheerio.load(data);
         let calendar = $(".ContributionCalendar-day");
 
@@ -35,10 +35,10 @@ async function scrapeGitHub(url, inData) {
 
 // SCRAPE GITLAB
 // Scrapse gitlabs contribution data through it's calendar.json data
-async function scrapeGitLab(url, inData) {
+async function scrapeGitLab(usr, inData) {
     outData = inData;
 
-    const data = await fetch(`https://gitlab.com/users/${url}/calendar.json`, {
+    const data = await fetch(`https://gitlab.com/users/${usr}/calendar.json`, {
         "credentials": "include",
         "headers": {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/105.0",
@@ -51,7 +51,7 @@ async function scrapeGitLab(url, inData) {
             "Sec-Fetch-Site": "same-origin",
             "If-None-Match": "W/\"23a95d1f53c7e24122b9b721f40fb489\""
         },
-        "referrer": `https://gitlab.com/${url}`,
+        "referrer": `https://gitlab.com/${usr}`,
         "method": "GET",
         "mode": "cors"
     });
@@ -65,7 +65,7 @@ async function scrapeGitLab(url, inData) {
 
 // SCRAPE LEETCODE
 // Makes a request to Leetcode's graphql API to get calendar data. This comes in as UNIX, and a date behind Github, so it uses the formatDate function to parse
-async function scrapeLeetCode(url, inData) {
+async function scrapeLeetCode(usr, inData) {
     outData = inData;
 
     // Fetch request
@@ -80,7 +80,7 @@ async function scrapeLeetCode(url, inData) {
             "Sec-Fetch-Mode": "cors",
             "Sec-Fetch-Site": "same-origin"
         },
-        "referrer": `https://leetcode.com/${url}`,
+        "referrer": `https://leetcode.com/${usr}`,
         "body": "{\"query\":\"\\n    query userProfileCalendar($username: String!, $year: Int) {\\n  matchedUser(username: $username) {\\n    userCalendar(year: $year) {\\n      activeYears\\n      streak\\n      totalActiveDays\\n      dccBadges {\\n        timestamp\\n        badge {\\n          name\\n          icon\\n        }\\n      }\\n      submissionCalendar\\n    }\\n  }\\n}\\n    \",\"variables\":{\"username\":\"connorthecrowe\"}}",
         "method": "POST",
         "mode": "cors"
@@ -110,9 +110,9 @@ function formatDate(unixDate) {
 async function main() {
     unifiedData = initializeStructure();
 
-    if (URL_GITHUB) unifiedData = await scrapeGitHub(URL_GITHUB, unifiedData);
-    if (URL_GITLAB) unifiedData = await scrapeGitLab(URL_GITLAB, unifiedData);
-    if (URL_LEETCODE) unifiedData = await scrapeLeetCode(URL_LEETCODE, unifiedData);
+    if (USR_GITHUB) unifiedData = await scrapeGitHub(USR_GITHUB, unifiedData);
+    if (USR_GITLAB) unifiedData = await scrapeGitLab(USR_GITLAB, unifiedData);
+    if (USR_LEETCODE) unifiedData = await scrapeLeetCode(USR_LEETCODE, unifiedData);
     
     console.log(unifiedData);
 }
