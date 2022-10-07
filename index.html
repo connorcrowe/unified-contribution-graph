@@ -43,7 +43,8 @@
             for (let i = 1; i < 365; i += 1){
                 squaresGrid[i-1].attr({
                     fill: '#2d2',
-                    opacity: calVals[i]['github'] + calVals[i]['gitlab'] + calVals[i]['leetcode'] + 0.05
+                    opacity: calVals[i]['github']/15 + calVals[i]['gitlab']/15 + calVals[i]['leetcode']/15 + 0.05,
+                    id: `rect#${i}`,
                 })
             }
         }
@@ -53,5 +54,11 @@
 
         list = initSquares(15, 17, 4);
         fillSquares(calendar, list);
+        
+        const para = document.createElement("title");
+        const node = document.createTextNode("This is new.");
+        para.appendChild(node);
+        const element = document.getElementById("rect#1");
+        element.appendChild(para);
     </script>
 </html>
