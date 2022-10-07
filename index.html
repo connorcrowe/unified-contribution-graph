@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Contribution Graph Test</title>
+        <script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+        <script type="text/javascript" src="output.js"></script>
+    </head>
+    <body>
+        
+    </body>
+    <script>
+        // Load Data
+        const calendar = JSON.parse(data);
+
+        function initSquares(rectSize, gapSize, cornerRadius) {
+            let squaresGrid = new SVG.List();
+
+            xOffset = 0;
+            yOffset = new Date().getDay() + 1;
+
+            for (let i = 0; i < 364; i += 1) {
+                let rect = draw.rect(rectSize, rectSize)
+                    .attr({fill: '#000', opacity: '0.2'})
+                    .radius(cornerRadius)
+                    .move(xOffset*gapSize, yOffset*gapSize);
+                squaresGrid.push(rect);
+
+                yOffset += 1;
+                if (yOffset == 7) {
+                    yOffset = 0;
+                    xOffset += 1;
+                }
+            }
+            return squaresGrid;
+        }
+
+        function fillSquares(calendarData, squaresGrid) {
+            const calLength = Object.keys(calendarData).length;
+            const calVals = Object.values(calendarData);
+            console.log(calVals);
+
+            for (let i = 1; i < 365; i += 1){
+                squaresGrid[i-1].attr({
+                    fill: '#2d2',
+                    opacity: calVals[i]['github'] + calVals[i]['gitlab'] + calVals[i]['leetcode'] + 0.05
+                })
+            }
+        }
+
+        let draw = SVG().addTo('body').size(1200, 300)
+     
+
+        list = initSquares(15, 17, 4);
+        fillSquares(calendar, list);
+    </script>
+</html>

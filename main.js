@@ -133,6 +133,6 @@ async function main() {
     if (USR_GITLAB) unifiedData = await scrapeGitLab(USR_GITLAB, unifiedData);
     if (USR_LEETCODE) unifiedData = await scrapeLeetCode(USR_LEETCODE, unifiedData);
     //console.log(unifiedData)
-    console.log(JSON.stringify(unifiedData));
+    console.log(JSON.stringify({ ...unifiedData}));
 }
 main();
