@@ -1,14 +1,28 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const fetch = require("node-fetch");
+const fs = require('fs');
 
 const USR_GITHUB = 'connorcrowe';
 const USR_GITLAB = 'connorcrowe';
 const USR_LEETCODE = 'connorthecrowe';
 
-
 function initializeStructure() {
-    return {};
+    outData = []
+    const d = new Date();
+    d.setHours(0,0,0,0)
+    d.setDate(d.getDate()-365);
+
+    for (let i = 0; i < 365; i += 1){
+        d.setDate(d.getDate() +1)
+        const date = [
+            d.getFullYear(),
+            (d.getMonth()+1).toString().padStart(2, '0'),
+            d.getDate().toString().padStart(2, '0'),
+        ].join('-');
+        outData[i] = {'date': date, 'github': 0, 'gitlab': 0, 'leetcode': 0};
+    }
+    return outData;
 }
 
 // SCRAPE GITHUB
@@ -84,7 +98,7 @@ async function scrapeLeetCode(usr, inData) {
         "body": "{\"query\":\"\\n    query userProfileCalendar($username: String!, $year: Int) {\\n  matchedUser(username: $username) {\\n    userCalendar(year: $year) {\\n      activeYears\\n      streak\\n      totalActiveDays\\n      dccBadges {\\n        timestamp\\n        badge {\\n          name\\n          icon\\n        }\\n      }\\n      submissionCalendar\\n    }\\n  }\\n}\\n    \",\"variables\":{\"username\":\"connorthecrowe\"}}",
         "method": "POST",
         "mode": "cors"
-    }).then(console.log('fetched')); 
+    }); 
 
     const jsonData = await data.json();
     const calendar = JSON.parse(jsonData.data.matchedUser.userCalendar.submissionCalendar);
@@ -110,10 +124,11 @@ function formatDate(unixDate) {
 async function main() {
     unifiedData = initializeStructure();
 
-    if (USR_GITHUB) unifiedData = await scrapeGitHub(USR_GITHUB, unifiedData);
-    if (USR_GITLAB) unifiedData = await scrapeGitLab(USR_GITLAB, unifiedData);
-    if (USR_LEETCODE) unifiedData = await scrapeLeetCode(USR_LEETCODE, unifiedData);
-    
-    console.log(unifiedData);
+    //if (USR_GITHUB) unifiedData = await scrapeGitHub(USR_GITHUB, unifiedData);
+    //if (USR_GITLAB) unifiedData = await scrapeGitLab(USR_GITLAB, unifiedData);
+    //if (USR_LEETCODE) unifiedData = await scrapeLeetCode(USR_LEETCODE, unifiedData);
+    console.log(unifiedData)
+    console.log(unifiedData[new Date('2022-10-07')])
+    //console.log(JSON.stringify(unifiedData));
 }
 main();
