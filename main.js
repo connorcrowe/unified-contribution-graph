@@ -20,7 +20,7 @@ function initializeStructure() {
             (d.getMonth()+1).toString().padStart(2, '0'),
             d.getDate().toString().padStart(2, '0'),
         ].join('-');
-        outData[i] = {'date': date, 'github': 0, 'gitlab': 0, 'leetcode': 0};
+        outData[date] = {'github': 0, 'gitlab': 0, 'leetcode': 0};
     }
     return outData;
 }
@@ -39,7 +39,12 @@ async function scrapeGitHub(usr, inData) {
 
         // Parse calendar days objects into desired form
         for (let i=0; i<calendar.length; i++) {
-            outData[calendar[i]['attribs']['data-date']] = {'github': calendar[i]['attribs']['data-count']};
+            const date = calendar[i]['attribs']['data-date']
+
+            if (Object.keys(outData).includes(date)) {
+                outData[date]['github'] = parseInt(calendar[i]['attribs']['data-count']);
+            }
+            
         }
     } catch (err) {
         console.error(err);
@@ -124,11 +129,10 @@ function formatDate(unixDate) {
 async function main() {
     unifiedData = initializeStructure();
 
-    //if (USR_GITHUB) unifiedData = await scrapeGitHub(USR_GITHUB, unifiedData);
-    //if (USR_GITLAB) unifiedData = await scrapeGitLab(USR_GITLAB, unifiedData);
-    //if (USR_LEETCODE) unifiedData = await scrapeLeetCode(USR_LEETCODE, unifiedData);
-    console.log(unifiedData)
-    console.log(unifiedData[new Date('2022-10-07')])
-    //console.log(JSON.stringify(unifiedData));
+    if (USR_GITHUB) unifiedData = await scrapeGitHub(USR_GITHUB, unifiedData);
+    if (USR_GITLAB) unifiedData = await scrapeGitLab(USR_GITLAB, unifiedData);
+    if (USR_LEETCODE) unifiedData = await scrapeLeetCode(USR_LEETCODE, unifiedData);
+    //console.log(unifiedData)
+    console.log(JSON.stringify(unifiedData));
 }
 main();
