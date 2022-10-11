@@ -38,15 +38,30 @@
         function fillSquares(calendarData, squaresGrid) {
             const calLength = Object.keys(calendarData).length;
             const calVals = Object.values(calendarData);
-            console.log(calVals);
+            
 
             for (let i = 1; i < 365; i += 1){
+                const gh = decimalToHex(Math.round(calVals[i]['github']/20*255));
+                const gl = decimalToHex(Math.round(calVals[i]['gitlab']/20*255));
+                const lc = decimalToHex(Math.round(calVals[i]['leetcode']/20*255));
+                console.log(gh, gl, lc)
+
                 squaresGrid[i-1].attr({
-                    fill: '#2d2',
-                    opacity: calVals[i]['github']/15 + calVals[i]['gitlab']/15 + calVals[i]['leetcode']/15 + 0.05,
+                    fill: `#${gh+gl+lc}`,
+                    opacity: (calVals[i]['github'] + calVals[i]['gitlab'] + calVals[i]['leetcode'])/20 + 0.03,//calVals[i]['github']/15 + calVals[i]['gitlab']/15 + calVals[i]['leetcode']/15 + 0.05,
                     id: `rect#${i}`,
                 })
             }
+        }
+
+        function decimalToHex(d, padding) {
+            if (d > 255) d = 255;
+            let hex = Number(d).toString(16);
+            padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
+            while (hex.length < padding) {
+                hex = "0" + hex;
+            }
+            return hex;
         }
 
         let draw = SVG().addTo('body').size(1200, 300)
