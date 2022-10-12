@@ -77,7 +77,9 @@ async function scrapeGitLab(usr, inData) {
     const calendar = await data.json();
     
     for (date in calendar) {
-        outData[date]['gitlab'] = calendar[date]
+        if (Object.keys(outData).includes(date)) {
+            outData[date]['gitlab'] = calendar[date]
+        }
     }
     return outData;
 }
@@ -128,7 +130,7 @@ function formatDate(unixDate) {
 
 async function main() {
     unifiedData = initializeStructure();
-
+    
     if (USR_GITHUB) unifiedData = await scrapeGitHub(USR_GITHUB, unifiedData);
     if (USR_GITLAB) unifiedData = await scrapeGitLab(USR_GITLAB, unifiedData);
     if (USR_LEETCODE) unifiedData = await scrapeLeetCode(USR_LEETCODE, unifiedData);
