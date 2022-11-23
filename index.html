@@ -15,7 +15,6 @@
     <script>
         // Load Data
         const calendar = JSON.parse(data);
-        console.log(calendar)
 
         function initSquares(rectSize, gapSize, cornerRadius) {
             let squaresGrid = new SVG.List();
@@ -59,15 +58,11 @@
                     lc: calVals[i]['leetcode'] || 0
                 })
                 squaresGrid[i-1].saveFill = `#${gh+gl+lc}`;
+                squaresGrid[i-1].saveOpacity = (calVals[i]['github'] + calVals[i]['gitlab'] + calVals[i]['leetcode'])/10 + 0.03;
                 squaresGrid[i-1].date = calKeys[i];
                 squaresGrid[i-1].github = calVals[i]['github'];
                 squaresGrid[i-1].gitlab = calVals[i]['gitlab'];
-                squaresGrid[i-1].leetcode = calVals[i]['leetcode'];
-                //.mouseover(function() {
-                  //      this.fill({ color: '#f00' })
-                 //   })
-                //.mouseout(function() { this.fill({ color: saveFill})})
-                
+                squaresGrid[i-1].leetcode = calVals[i]['leetcode'];            
             }
         }
 
@@ -81,26 +76,23 @@
             return hex;
         }
 
-        function eventSquares(calendarDat, squaresGrid) {
-
-        }
         let draw = SVG().addTo('body').size(1200, 300)
-     
-
         list = initSquares(15, 17, 4);
         fillSquares(calendar, list);
 
-        /*const mouseover = function() {
-            saveFill = this.fill;
-            this.fill({ color: '#f00' })
-            console.log(this.node.id)
+        const mouseover = function() {
+            // /this.fill({ color: '#999' })
+            this.attr({ 
+                fill: '#555',
+                opacity: 1 })
         }
         const mouseout = function() { 
-            this.fill({ color: saveFill})
+            //this.fill({ })
+            this.attr({
+                fill: this.saveFill,
+                opacity: this.saveOpacity
+            })
         }
-
-        list.on('mouseover', mouseover);
-        list.on('mouseout', mouseout); */
 
         const click = function() {
             document.getElementById("display-date").innerHTML = 'Date:\t' + this.node.id;
@@ -108,8 +100,10 @@
             document.getElementById("display-gitlab").innerHTML = 'GitLab:\t' + this.gitlab;
             document.getElementById("display-leetcode").innerHTML = 'Leetcode:\t' + this.leetcode;
         }
+
         list.on('click', click)
-        let tooltip = draw.rect(70,30)
+        list.on('mouseover', mouseover);
+        list.on('mouseout', mouseout);
 
     </script>
 </html>
