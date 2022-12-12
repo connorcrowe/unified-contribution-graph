@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<head>
+    <title>Unified Contribution Graph</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Fetch data</h1>
+    <button onclick="callBackend()" style="font-size: 48px">Fetch data? 🥺👉👈 </button>
+</body>
+
+<script>
+    
+    function request(method, url){
+        return new Promise(function(resolve, reject){
+            const xhr = new XMLHttpRequest();
+            xhr.open(method, url);
+            xhr.onload = function(){
+                if (xhr.status >= 200 && xhr.status < 300){
+                    resolve(xhr.response);
+                } else {
+                    reject({
+                        status: xhr.status,
+                        statusText: xhr.statusText
+                    });
+                }
+            };
+            xhr.onerror = function(){
+                reject({
+                    status: xhr.status,
+                    statusText: xhr.statusText
+                });
+            };
+            xhr.send();
+        });
+    };
+
+    async function callBackend(){
+        let result = await request("GET", window.location.origin + "/api/fetchData");
+        console.log(result)
+    }
+</script>
