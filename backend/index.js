@@ -4,18 +4,19 @@ const port = process.env['APP_PORT'] || 3000;
 const app = express();
 
 const fetchData = require('./fetchCalendarData.js');
-console.log(fetchData.fetchData()
-    )
+
 app.use(express.static('frontend'))
 
 app.get('/api/status', (req, res)=>{
   res.sendStatus(200);
 });
   
-app.get('/api/fetchData', (req, res)=>{
-    const jsonContent = JSON.stringify(fetchData.fetchData());
-    res.end(jsonContent);
+app.get('/api/fetchData', async (req, res)=>{
+    //const jsonContent = JSON.stringify(  fetchData.fetchData());
+    const jsonContent = await fetchData.fetchData();
     console.log(jsonContent)
+    res.send({ ...jsonContent });
+    
 });
 
 app.listen(port, () => {
