@@ -2,10 +2,15 @@
 <head>
     <title>Unified Contribution Graph</title>
     <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 </head>
 <body>
     <h1>Fetch data</h1>
     <button onclick="callBackend()" style="font-size: 48px">Fetch data? 🥺👉👈 </button>
+    <p id="display-date"></p>
+    <p id="display-github"></p>
+    <p id="display-gitlab"></p>
+    <p id="display-leetcode"></p>
 </body>
 
 <script>
@@ -36,6 +41,98 @@
 
     async function callBackend(){
         let result = await request("GET", window.location.origin + "/api/fetchData");
-        console.log(result)
+        console.log(result);
+        fillSquares(JSON.parse(result), list);
     }
+
+    function initSquares(rectSize, gapSize, cornerRadius) {
+        let squaresGrid = new SVG.List();
+
+        xOffset = 0;
+        yOffset = new Date().getDay() + 1;
+
+        for (let i = 0; i < 364; i += 1) {
+            let rect = draw.rect(rectSize, rectSize)
+                .attr({fill: '#000', opacity: '0.2'})
+                .radius(cornerRadius)
+                .move(xOffset*gapSize, yOffset*gapSize)
+                ;
+            rect.test = 'AAA';
+            squaresGrid.push(rect);
+
+            yOffset += 1;
+            if (yOffset == 7) {
+                yOffset = 0;
+                xOffset += 1;
+            }
+        }
+        return squaresGrid;
+    }
+
+    function fillSquares(calendarData, squaresGrid) {
+        const calLength = Object.keys(calendarData).length;
+        const calVals = Object.values(calendarData);
+        const calKeys = Object.keys(calendarData);
+
+        for (let i = 1; i < 365; i += 1){
+            const gh = decimalToHex(Math.round(calVals[i]['github']/20*255));
+            const gl = decimalToHex(Math.round(calVals[i]['gitlab']/20*255));
+            const lc = decimalToHex(Math.round(calVals[i]['leetcode']/20*255));
+
+            squaresGrid[i-1].attr({
+                saveFill: `#${gh+gl+lc}`,
+                fill: `#${gh+gl+lc}`,
+                opacity: (calVals[i]['github'] + calVals[i]['gitlab'] + calVals[i]['leetcode'])/10 + 0.03,//calVals[i]['github']/15 + calVals[i]['gitlab']/15 + calVals[i]['leetcode']/15 + 0.05,
+                id: calKeys[i],
+                lc: calVals[i]['leetcode'] || 0
+            })
+            squaresGrid[i-1].saveFill = `#${gh+gl+lc}`;
+            squaresGrid[i-1].saveOpacity = (calVals[i]['github'] + calVals[i]['gitlab'] + calVals[i]['leetcode'])/10 + 0.03;
+            squaresGrid[i-1].date = calKeys[i];
+            squaresGrid[i-1].github = calVals[i]['github'];
+            squaresGrid[i-1].gitlab = calVals[i]['gitlab'];
+            squaresGrid[i-1].leetcode = calVals[i]['leetcode'];            
+        }
+    }
+
+    function decimalToHex(d, padding) {
+        if (d > 255) d = 255;
+        let hex = Number(d).toString(16);
+        padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
+        while (hex.length < padding) {
+            hex = "0" + hex;
+        }
+        return hex;
+    }
+
+    let draw = SVG().addTo('body').size(1200, 300)
+    list = initSquares(15, 17, 4);
+</script>
+<script>
+
+    const mouseover = function() {
+        // /this.fill({ color: '#999' })
+        this.attr({ 
+            fill: '#595',
+            opacity: 1 })
+    }
+    const mouseout = function() { 
+        //this.fill({ })
+        this.attr({
+            fill: this.saveFill,
+            opacity: this.saveOpacity
+        })
+    }
+
+    const click = function() {
+        document.getElementById("display-date").innerHTML = 'Date:\t' + this.node.id;
+        document.getElementById("display-github").innerHTML = 'GitHub:\t' + this.github;
+        document.getElementById("display-gitlab").innerHTML = 'GitLab:\t' + this.gitlab;
+        document.getElementById("display-leetcode").innerHTML = 'Leetcode:\t' + this.leetcode;
+    }
+
+    list.on('click', click)
+    list.on('mouseover', mouseover);
+    list.on('mouseout', mouseout);
+
 </script>
