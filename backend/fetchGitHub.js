@@ -12,7 +12,7 @@ exports.getData = async (user, contributionObject) => {
             for (let i=0; i<calendar.length; i++) {
                 const date = calendar[i]['attribs']['data-date']
                 if (Object.keys(outData).includes(date)) {
-                    outData[date]['github'] = parseInt(calendar[i]['attribs']['data-count']);
+                    outData[date]['github'] = parseInt(calendar[i]['children'][0]['data'].split(' ')[0] || 0);
                 }
             }
         } catch (err) {
