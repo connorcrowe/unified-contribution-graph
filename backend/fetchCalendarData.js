@@ -1,8 +1,3 @@
-
-const USR_GITHUB = 'connorcrowe';
-const USR_GITLAB = 'connorcrowe';
-const USR_LEETCODE = 'connorthecrowe';
-
 const fetchGitHub = require('./fetchGitHub');
 const fetchGitLab = require('./fetchGitLab');
 const fetchLeetCode = require('./fetchLeetCode.js');
@@ -13,7 +8,6 @@ exports.fetchData = async (usernames) => {
     responseData = await fetchGitLab.getData(usernames.gitlab, responseData);
     responseData = await fetchLeetCode.getData(usernames.leetcode, responseData);
     return responseData
-    return JSON.stringify({ ...responseData});
 }
 
 function jsDateToDashForm (jsDate) {
