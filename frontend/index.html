@@ -119,8 +119,8 @@
     const mouseout = function() { 
         //this.fill({ })
         this.attr({
-            fill: this.saveFill,
-            opacity: this.saveOpacity
+            fill: this.saveFill || '#000',
+            opacity: this.saveOpacity || 0.2,
         })
     }
 
