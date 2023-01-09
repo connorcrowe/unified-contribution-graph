@@ -8,13 +8,14 @@
     <h1>Unified Contribution Graph</h1>
     <h2>One place to see all your commits</h2>
     <h3>Enter usernames</h3>
-    <form>
-        <label>GitHub</label>
-        <input value="connorcrowe"/>
-        <label>GitLab</label>
-        <input value="connorcrowe"/>
-        <label>LeetCode</label>
-        <input value="connorthecrowe"/>
+    <form action="/form-submission" method="post">
+        <label for="github">GitHub</label><br>
+        <input type="text" id="input-github" name="github" value="connorcrowe"/><br>
+        <label for="gitlab">GitLab</label><br>
+        <input type="text" id="input-gitlab" name="gitlab" value="connorcrowe"/><br>
+        <label for="leetcode">LeetCode</label><br>
+        <input type="text" id="input-leetcode" name="leetcode" value="connorthecrowe"/><br>
+        <button type="submit">get</button>
     </form>
     <button onclick="callBackend()">Fetch contributions</button>
     <p id="display-date">Date:</p>
@@ -24,6 +25,31 @@
 </body>
 
 <script>
+
+    const form = document.querySelector('form');
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const params = new URLSearchParams();
+
+        for (const [key, value] of formData.entries()) {
+            params.set(key, value);
+        }
+
+        const data = params.toString();
+        console.log(data)
+        const xhr = new XMLHttpRequest();
+        
+        xhr.open('POST', '/form-submission');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = () => {
+            // Do something with the response from the server
+            console.log(xhr.response);
+            fillSquares(JSON.parse(xhr.response), list);
+        };
+        
+        xhr.send(data);
+    })
     
     function request(method, url){
         return new Promise(function(resolve, reject){
@@ -50,7 +76,7 @@
     };
 
     async function callBackend(){
-        let result = await request("GET", window.location.origin + "/api/fetchData");
+        let result = await request("GET", window.location.origin + "/api/fetchData/1");
         console.log(result);
         fillSquares(JSON.parse(result), list);
     }

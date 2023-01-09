@@ -7,11 +7,11 @@ const fetchGitHub = require('./fetchGitHub');
 const fetchGitLab = require('./fetchGitLab');
 const fetchLeetCode = require('./fetchLeetCode.js');
 
-exports.fetchData = async () => {
+exports.fetchData = async (usernames) => {
     let responseData = initializeContributionObject();
-    responseData = await fetchGitHub.getData(USR_GITHUB, responseData);
-    responseData = await fetchGitLab.getData(USR_GITLAB, responseData);
-    responseData = await fetchLeetCode.getData(USR_LEETCODE, responseData);
+    responseData = await fetchGitHub.getData(usernames.github, responseData);
+    responseData = await fetchGitLab.getData(usernames.gitlab, responseData);
+    responseData = await fetchLeetCode.getData(usernames.leetcode, responseData);
     return responseData
     return JSON.stringify({ ...responseData});
 }
