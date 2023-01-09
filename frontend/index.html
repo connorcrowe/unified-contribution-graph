@@ -5,8 +5,18 @@
     <script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 </head>
 <body>
-    <h1>Fetch data</h1>
-    <button onclick="callBackend()">Fetch data </button>
+    <h1>Unified Contribution Graph</h1>
+    <h2>One place to see all your commits</h2>
+    <h3>Enter usernames</h3>
+    <form>
+        <label>GitHub</label>
+        <input value="connorcrowe"/>
+        <label>GitLab</label>
+        <input value="connorcrowe"/>
+        <label>LeetCode</label>
+        <input value="connorthecrowe"/>
+    </form>
+    <button onclick="callBackend()">Fetch contributions</button>
     <p id="display-date">Date:</p>
     <p id="display-github">GitHub:</p>
     <p id="display-gitlab">GitLab:</p>
