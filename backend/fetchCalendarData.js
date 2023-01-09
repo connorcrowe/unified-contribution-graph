@@ -4,9 +4,9 @@ const fetchLeetCode = require('./fetchLeetCode.js');
 
 exports.fetchData = async (usernames) => {
     let responseData = initializeContributionObject();
-    responseData = await fetchGitHub.getData(usernames.github, responseData);
-    responseData = await fetchGitLab.getData(usernames.gitlab, responseData);
-    responseData = await fetchLeetCode.getData(usernames.leetcode, responseData);
+    if (usernames.github) responseData = await fetchGitHub.getData(usernames.github, responseData);
+    if (usernames.gitlab) responseData = await fetchGitLab.getData(usernames.gitlab, responseData);
+    if (usernames.leetcode) responseData = await fetchLeetCode.getData(usernames.leetcode, responseData);
     return responseData
 }
 
