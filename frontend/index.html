@@ -20,17 +20,17 @@
     <h3>Show/Hide</h3>
 
     <label class="switch">
-        <input id="switch-github" type="checkbox" checked>
+        <input id="switch-github" onclick="updateSquares()" type="checkbox" checked>
         <span class="slider"></span>
         GitHub
     </label>
     <label class="switch"> 
-        <input id="switch-gitlab" type="checkbox" checked>
+        <input id="switch-gitlab" onclick="updateSquares()" type="checkbox" checked>
         <span class="slider"></span>
         GitLab
     </label>
     <label class="switch"> 
-        <input id="switch-leetcode" type="checkbox" checked>
+        <input id="switch-leetcode" onclick="updateSquares()" type="checkbox" checked>
         <span class="slider"></span>
         LeetCode
     </label>
@@ -45,6 +45,7 @@
 </body>
 
 <script>
+let tempData; 
 const form = document.querySelector('form');
     form.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -62,9 +63,8 @@ const form = document.querySelector('form');
         xhr.open('POST', '/form-submission');
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onload = () => {
-            // Do something with the response from the server
-            console.log(xhr.response);
-            fillSquares(JSON.parse(xhr.response), list);
+            calData = JSON.parse(xhr.response);
+            updateSquares();
         };
         
         xhr.send(data);
@@ -124,14 +124,8 @@ const form = document.querySelector('form');
         }
     }
 
-    function decimalToHex(d, padding) {
-        if (d > 255) d = 255;
-        let hex = Number(d).toString(16);
-        padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
-        while (hex.length < padding) {
-            hex = "0" + hex;
-        }
-        return hex;
+    function updateSquares() {
+        fillSquares(calData, list);
     }
 
     const mouseover = function() {
@@ -154,7 +148,6 @@ const form = document.querySelector('form');
     
     let draw = SVG().addTo('body').size(1200, 300)
     list = initSquares(15, 17, 4);
-
     list.on('click', click)
     list.on('mouseover', mouseover);
     list.on('mouseout', mouseout);
