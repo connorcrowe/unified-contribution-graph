@@ -5,6 +5,14 @@ More specifically, the backend uses a few tools to scrape data from the existing
 
 Leave a field blank if you do not use that service, and use the `Show/Hide` buttons to filter out services from the chart. Click on a date in the chart to see specific contribution numbers for each service on that day. 
 
+## Demo
+Check it out [here](https://unified-contribution-graph.onrender.com/)!
+*Notes:*
+- ***LeetCode is currently broken! Being looked into***
+- *It is hosted un-dedicated on Render (so first load may be slow)*
+- *I still need to optimize my awaits (so the actual data fetching may be slow)*
+- *I still need to build a real front end*
+
 ## Run it
 - Clone the repo
 - Install `npm i`
