@@ -8,7 +8,6 @@ Leave a field blank if you do not use that service, and use the `Show/Hide` butt
 ## Demo
 Check it out [here](https://unified-contribution-graph.onrender.com/)!
 *Notes:*
-- ***LeetCode is currently broken! Being looked into***
 - *It is hosted un-dedicated on Render (so first load may be slow)*
 - *I still need to optimize my awaits (so the actual data fetching may be slow)*
 - *I still need to build a real front end*
