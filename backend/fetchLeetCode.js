@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 
 exports.getData = async (user, contributionObject) => {
     outData = contributionObject;
-    const data = await fetch("https://leetcode-stats-api.herokuapp.com/connorthecrowe");
+    const data = await fetch(`https://leetcode-stats-api.herokuapp.com/${user}`);
     const jsonData = await data.json();
     const calendar = jsonData.submissionCalendar;
     for (date in calendar) {
