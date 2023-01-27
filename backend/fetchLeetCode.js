@@ -7,7 +7,7 @@ exports.getData = async (user, contributionObject) => {
     const calendar = jsonData.submissionCalendar;
     for (date in calendar) {
         outData[
-            unixDateToDashForm(parseInt(date)+ 86400)]
+            unixDateToDashForm(parseInt(date))]
             ['leetcode'] = calendar[date];
     }
     return outData;
